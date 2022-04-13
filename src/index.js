@@ -68,7 +68,7 @@ io.on('connection', (socket) =>{
         socket.join(user.room)
         
         //socket.emit('message', generateMessage("Admin","Welcome!"))
-        socket.broadcast.to(user.room).emit("message", generateMessage("Chatter", `${user.username} is in the chat`))
+        socket.broadcast.to(user.room).emit("message", generateMessage("Chatter", `${user.username} is in the chat`, "0"))
         io.to(user.room).emit('roomData', {
             room: user.room,
             users: getUsersInRoom(user.room)
@@ -87,7 +87,7 @@ io.on('connection', (socket) =>{
          if(filter.isProfane(msg)){
             return callback("Profanity is not allowed")
          }
-         io.to(user.room).emit('message', generateMessage(user.username, msg.msg))
+         io.to(user.room).emit('message', generateMessage(user.username, msg.msg, msg.sender))
          callback('Delivered!')
          let config = {
             headers: {
@@ -130,7 +130,7 @@ io.on('connection', (socket) =>{
         const user = removeUser(socket.id)
 
         if(user){
-            io.to(user.room).emit('message', generateMessage("Chatter", `${user.username} has left!`))
+            io.to(user.room).emit('message', generateMessage("Chatter", `${user.username} has left!`, "0"))
             io.to(user.room).emit('roomData', {
                 room: user.room,
                 users: getUsersInRoom(user.room)
@@ -156,8 +156,42 @@ io.on('connection', (socket) =>{
     socket.on("sendLocation", (pos, callback)=>{
         const user = getUser(socket.id)
         if(user){
-        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${pos.latitude},${pos.longitude}`))
+        const newMessage = generateLocationMessage(user.username, `https://google.com/maps?q=${pos.latitude},${pos.longitude}`, pos.sender);
+        io.to(user.room).emit('locationMessage', newMessage)
         callback("Location Shared")
+        let config = {
+            headers: {
+            Authorization: token,
+            }
+        }
+         /*
+        axios.get('http://localhost:3001/boards/' + user.room, config)
+        .then((response) =>{
+            const messages = response.data.messages;
+             const  messager = {
+                   sender: pos.sender,
+                   msg: newMessage.url,
+                   username: newMessage.username
+               }
+            
+            messages.push({message: messager})
+            const data = {
+                messages
+            }
+            axios.patch('http://localhost:3001/boards/' + user.room, data,  config)
+               .then((response) =>{
+               })
+               .catch(function (error) {
+               console.log(error.message);
+               
+               });
+
+        })
+        .catch(function (error) {
+        console.log(error.message);
+        
+        });
+        */
         }
         
     })
