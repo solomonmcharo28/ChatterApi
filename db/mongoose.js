@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const  mongoAtlasUri =
-        "mongodb://127.0.0.1:27017/ChatterApp";
+        "mongodb+srv://myserviceApp:myserviceApp@cluster0.ncpjw.mongodb.net/ChatterApp?retryWrites=true&w=majority";
 try {
     // Connect to the MongoDB cluster
      mongoose.connect(
