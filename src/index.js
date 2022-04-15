@@ -47,7 +47,7 @@ io.on('connection', (socket) =>{
         let data = {
             online: true,
         }
-        axios.patch('http://localhost:3001/users/me',data ,  config)
+        axios.patch('https://solo-chatappapi.herokuapp.com/users/me',data ,  config)
                 .then((response) =>{
                 })
                 .catch(function (error) {
@@ -95,7 +95,7 @@ io.on('connection', (socket) =>{
             }
         }
         
-         axios.get('http://localhost:3001/boards/' + user.room, config)
+         axios.get('https://solo-chatappapi.herokuapp.com/boards/' + user.room, config)
          .then((response) =>{
              const messages = response.data.messages;
               const  messager = {
@@ -108,7 +108,7 @@ io.on('connection', (socket) =>{
              const data = {
                  messages
              }
-             axios.patch('http://localhost:3001/boards/' + user.room, data,  config)
+             axios.patch('https://solo-chatappapi.herokuapp.com/boards/' + user.room, data,  config)
                 .then((response) =>{
                 })
                 .catch(function (error) {
@@ -144,7 +144,7 @@ io.on('connection', (socket) =>{
         let data = {
             online: false,
         }
-        axios.patch('http://localhost:3001/users/me', data , config)
+        axios.patch('https://solo-chatappapi.herokuapp.com/users/me', data , config)
                 .then((response) =>{
                 })
                 .catch(function (error) {
